@@ -16,6 +16,7 @@ import TileJSON from 'ol/source/TileJSON';
 const container = document.querySelector('#popup');
 const content = document.querySelector('#popup-content');
 const closer = document.querySelector('.ol-popup-closer');
+const overlayBox = document.querySelector('#overlay-box');
 
 // console.log({ container, content, closer });
 const overlay = new Overlay({
@@ -24,6 +25,10 @@ const overlay = new Overlay({
   autoPanAnimation: {
     duration: 250,
   },
+});
+
+const boxOverlay = new Overlay({
+  element: overlayBox,
 });
 
 /**
@@ -45,7 +50,7 @@ const map = new Map({
       }),
     }),
   ],
-  overlays: [overlay],
+  overlays: [overlay, boxOverlay],
   view: new View({
     center: fromLonLat([0, 0]),
     zoom: 2,
@@ -61,7 +66,7 @@ map.on('singleclick', function (e) {
   const hdms = toStringHDMS(toLonLat(coordinate));
   console.log({ hdms });
   content.innerHTML = `
-      <p>You clicked here: </p>
+      <p style="color: red;">You clicked here: </p>
       <code>${hdms}</code>
       <div>this is popup content</div>       
   `;

@@ -8,11 +8,18 @@
 <body>
   <h1>Openlayers workshop</h1>
   <div id="map-container"></div>
-  <form id="search-panel" class="ol-panel">
-    <input type="text" name="search" id="search-input" />
-    <button id="search-btn">장소/주소 검색</button>
-    <button id="route-btn">경로 탐색</button>
-  </form>
+  <div id="search-panel" class="ol-panel">
+    <form id="search-panel-form">
+      <input type="text" name="search" id="search-input" />
+      <button type="button" id="search-btn">장소/주소 검색</button>
+      <button type="button" id="route-btn">경로 탐색</button>
+    </form>
+  </div>
+  <div id="search-panel-result" class="ol-panel-result" >
+    <div></div>
+    <ul></ul>
+  </div>
+
 
   <script src="index.js"></script>
 </body>

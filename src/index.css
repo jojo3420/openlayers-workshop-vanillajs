@@ -22,3 +22,17 @@ html, body {
   right: 8px;
   min-width: 100px;
 }
+.ol-panel-result {
+  position: absolute;
+  background-color: white;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  top: 70px;
+  /*left: 8px;*/
+  right: 8px;
+  min-width: 319px;
+  min-height: 100px;
+  display: none;
+}

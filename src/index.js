@@ -1,74 +1,40 @@
 import 'ol/ol.css';
 import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
-import XYZSource from 'ol/source/XYZ';
+import OSM from 'ol/source/OSM';
 import { fromLonLat, toLonLat } from 'ol/proj';
-import Overlay from 'ol/overlay';
-import { toStringHDMS } from 'ol/coordinate';
-import TileJSON from 'ol/source/TileJSON';
-
-// example source
-// https://openlayers.org/en/latest/examples/popup.html?q=popup
+import { defaults } from 'ol/interaction';
 
 /**
  * Elements that make up the popup.
  */
-const container = document.querySelector('#popup');
-const content = document.querySelector('#popup-content');
-const closer = document.querySelector('.ol-popup-closer');
-const overlayBox = document.querySelector('#overlay-box');
-
-// console.log({ container, content, closer });
-const overlay = new Overlay({
-  element: container,
-  authPan: true,
-  autoPanAnimation: {
-    duration: 250,
-  },
-});
-
-const boxOverlay = new Overlay({
-  element: overlayBox,
-});
-
-/**
- * Add a click handler to hide the popup.
- * @return {boolean} Don't follow the href.
- */
-closer.onclick = function () {
-  overlay.setPosition(null);
-  closer.blur();
-  return false;
-};
+const searchPanel = document.querySelector('#search-panel');
+const searchInput = document.querySelector('#search-input');
+const searchBtn = document.querySelector('#search-btn');
 
 const map = new Map({
   target: 'map-container',
   layers: [
     new TileLayer({
-      source: new XYZSource({
-        url: 'http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg',
-      }),
+      source: new OSM(),
     }),
   ],
-  overlays: [overlay, boxOverlay],
+  overlays: [],
+  // doubleClick 방지
+  interactions: defaults({ doubleClickZoom: false }),
+
   view: new View({
     center: fromLonLat([0, 0]),
     zoom: 2,
   }),
 });
 
-/**
- * Add a click handler to the map to render the popup.
- */
-map.on('singleclick', function (e) {
-  const coordinate = e.coordinate;
-  console.log({ coordinate });
-  const hdms = toStringHDMS(toLonLat(coordinate));
-  console.log({ hdms });
-  content.innerHTML = `
-      <p style="color: red;">You clicked here: </p>
-      <code>${hdms}</code>
-      <div>this is popup content</div>       
-  `;
-  overlay.setPosition(coordinate);
-});
+// 장소 /주소 검색
+searchBtn.onclick = function () {
+  const query = searchInput.value;
+  console.log({ query });
+  searchInput.value = '';
+};
+
+// panel element 붙이기
+map.getViewport().appendChild(searchPanel);

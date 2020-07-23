@@ -4,10 +4,16 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <link rel="stylesheet" href="index.css" />
+  <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,requestAnimationFrame,Element.prototype.classList,URL"></script>
+  <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
   <h1>Openlayers workshop</h1>
   <div id="map-container"></div>
+  <div id="popup"></div>
   <script src="index.js"></script>
 
 </body>

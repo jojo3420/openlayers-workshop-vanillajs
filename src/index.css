@@ -21,6 +21,7 @@ html, body {
   /*left: 8px;*/
   right: 8px;
   min-width: 100px;
+  z-index: 4;
 }
 .ol-panel-result {
   position: absolute;
@@ -35,4 +36,21 @@ html, body {
   min-width: 319px;
   min-height: 100px;
   display: none;
+  z-index: 3;
+}
+
+.ol-query-history {
+  position: absolute;
+  background-color: white;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  top: 70px;
+  /*left: 8px;*/
+  right: 8px;
+  min-width: 319px;
+  min-height: 110px;
+  display: none;
+  z-index: 4;
 }

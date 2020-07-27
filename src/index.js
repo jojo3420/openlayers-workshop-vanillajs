@@ -3,12 +3,16 @@ import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
-import { ZoomSlider } from 'ol/control';
 import { defaults as defaultControls } from 'ol/control';
+import { FullScreen } from 'ol/control';
 
 // 마우스 포지션 컨트롤 설정하기
 
 function createMap(divId) {
+  const attributons = `
+   <a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a>
+   <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>
+  `;
   const view = new View({
     center: fromLonLat([0, 0]),
     zoom: 2,
@@ -23,16 +27,14 @@ function createMap(divId) {
       }),
     ],
     view,
-    // 하지만 이렇게 해도 된다.
-    controls: defaultControls().extend([new ZoomSlider()]),
+    // add control
+    controls: defaultControls().extend([new FullScreen()]),
+    // 출처 표기 버튼
+    attributions: attributons,
   });
-
-  // 예제에서는 이렇게 설정한다.
-  // const zoomSlider = new ZoomSlider();
-  // map.addControl(zoomSlider);
+  console.log({ map });
   return map;
 }
 
 const map1 = createMap('map1');
 const map2 = createMap('map2');
-const map3 = createMap('map3');

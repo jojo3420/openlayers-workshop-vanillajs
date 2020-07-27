@@ -1,18 +1,16 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
   font-family: sans-serif;
 }
 
 .map {
   width: 100%;
   height: 400px;
-}
-
-.custom-zoom-extent {
-
-  background-color: darkred;
-  padding: 3px;
-  background-image: url('data/button.png');
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 

@@ -1,108 +1,82 @@
 import 'ol/ol.css';
-import { Map, View } from 'ol';
-import TileLayer from 'ol/layer/Tile';
-import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
-import OSM from 'ol/source/OSM';
-import {
-  MousePosition,
-  ZoomToExtent,
-  defaults as defaultControls,
-} from 'ol/control';
-import { createStringXY } from 'ol/coordinate';
-import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
-import { Icon, Style } from 'ol/style';
-import { toSize } from 'ol/size';
-import Overlay from 'ol/Overlay';
-import { fromLonLat } from 'ol/proj';
-import iconURL from './data/icon.png';
-import buttonIcon from './data/button.png';
+import 'ol-layerswitcher/src/ol-layerswitcher.css';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import { transform } from 'ol/proj';
+import LayerGroup from 'ol/layer/Group';
+import LayerImage from 'ol/layer/Image';
+import LayerTile from 'ol/layer/Tile';
+import SourceImageArcGISRest from 'ol/source/ImageArcGISRest';
+import SourceOSM from 'ol/source/OSM';
+import SourceStamen from 'ol/source/Stamen';
+import LayerSwitcher from 'ol-layerswitcher';
 
-/*
- * ZoomToExtent
- * 이 기능을 이용하여 초기 위치로 화면을 이동하는 기능 구현!
-  https://openlayers.org/en/latest/examples/navigation-controls.html?q=control
-  *
- * */
+// github - sample code
+// https://github.com/walkermatt/ol-layerswitcher-examples
 
-const center = [126.98, 37.57];
+// npm
+// https://www.npmjs.com/package/ol-layerswitcher
 
-function createMap(divId) {
-  const view = new View({
-    zoom: 13,
-    center: center,
-    // center: [0, 0],
-    projection: 'EPSG:4326',
-  });
-
-  const mousePosition = new MousePosition({
-    projection: 'EPSG:4326',
-    //  정밀도 6자릿
-    coordinateFormat: createStringXY(6),
-  });
-  const zoomToExtent = new ZoomToExtent({
-    // f1, f2
-    extent: [126.955912, 37.577676, 127.005598, 37.559109],
-    label: 'G',
-    // tipLabel: 'TIP',
-    // className: 'custom-zoom-extent',
-    // target: document.querySelector('#position-button'),
-  });
-
-  const f1 = createFeature([126.955912, 37.577676]);
-  const f2 = createFeature([127.002621, 37.580178]);
-  const f3 = createFeature([126.956392, 37.555499]);
-  const f4 = createFeature([127.005598, 37.559109]);
-  const centerPoint = createFeature(center);
-
-  const map = new Map({
-    target: divId,
-    layers: [
-      new TileLayer({
-        source: new OSM(),
-      }),
-      new VectorLayer({
-        source: new VectorSource({
-          features: [f1, f2, f3, f4, centerPoint],
+const map = new Map({
+  target: 'map',
+  layers: [
+    new LayerGroup({
+      title: 'Base maps',
+      layers: [
+        new LayerGroup({
+          title: 'Water color with labels',
+          type: 'base',
+          combine: true,
+          visible: false,
+          layers: [
+            new LayerTile({
+              source: new SourceStamen({
+                layer: 'watercolor',
+              }),
+            }),
+            new LayerTile({
+              source: new SourceStamen({
+                layer: 'terrain-labels',
+              }),
+            }),
+          ],
         }),
-      }),
-    ],
-    view,
-    controls: defaultControls().extend([mousePosition, zoomToExtent]),
-  });
-
-  return map;
-}
-
-function createFeature(coords) {
-  if (!coords) return;
-
-  console.log({ coords });
-  const feature = new Feature({
-    geometry: new Point(coords),
-    name: 'test-name',
-  });
-  const iconStyle = new Style({
-    image: new Icon({
-      anchor: [0.5, 46],
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'pixels',
-      src: coords.toString() === center.toString() ? buttonIcon : iconURL,
+        new LayerTile({
+          title: 'Water color',
+          type: 'base',
+          visible: false,
+          source: new SourceStamen({
+            layer: 'watercolor',
+          }),
+        }),
+        new LayerTile({
+          title: 'OSM',
+          type: 'base',
+          visible: true,
+          source: new SourceOSM(),
+        }),
+      ],
     }),
-  });
-  feature.setStyle(iconStyle);
+    new LayerGroup({
+      title: 'Overlays',
+      layers: [
+        new LayerImage({
+          title: 'Countries',
+          source: new SourceImageArcGISRest({
+            ratio: 1,
+            params: { LAYERS: 'show:0' },
+            url:
+              'https://ons-inspire.esriuk.com/arcgis/rest/services/Administrative_Boundaries/Countries_December_2016_Boundaries/MapServer',
+          }),
+        }),
+      ],
+    }),
+  ],
+  view: new View({
+    center: transform([-0.92, 52.96], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 6,
+  }),
+});
 
-  return feature;
-}
-
-const map = createMap('map');
-const btn = document.querySelector('#btn');
-btn.onclick = (e) => {
-  const view = map.getView();
-  const extent =
-    [126.955912, 37.577676, 127.005598, 37.559109] ||
-    view.getProjection().getExtent();
-  console.log({ extent });
-  view.fit(extent);
-};
+const layerSwitcher = new LayerSwitcher();
+map.addControl(layerSwitcher);

@@ -1,80 +1,66 @@
 import 'ol/ol.css';
 import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
-import TileJSON from 'ol/source/TileJSON';
 import OSM from 'ol/source/OSM';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, transformExtent } from 'ol/proj';
+import proj4 from 'proj4'; // 의존성 설치!
+import { register } from 'ol/proj/proj4';
+import { ScaleLine } from 'ol/control';
 
 /*
-* Layer Zoom Limits
- 레이어는 옵션으로 레이어 가시성을 제어하기 위한 minZoom 및 maxZoom 옵션을 지원함
- *
- *
- * 최소 또는 최대 줌을 설정하면 레이어는 minZoom보다 크고
- * maxZoom보다 작거나 같은 줌 레벨에서만 볼 수 있습니다.
- *  map구성 후 레이어의 setMinZoom 및 setMaxZoom을 사용하여 제한을 설정할 수도 있습니다.
- *  이 예는 확대 / 축소 수준 14 이하의 OSM 계층과 확대 / 축소 수준 14 이상의 USGS 계층을 보여줍니다.
+* ScaleLine Control
+  *이 예제는 미국 단위의 ScaleLine 컨트롤을 포함하여 (마일 인듯)
+  * OpenStreetMap을 NAD83 Indiana East로
+  * 클라이언트 측에서 재 투영하는 것을 보여줍니다.
 *
 *
+https://openlayers.org/en/latest/examples/scaleline-indiana-east.html?q=control
 * */
-// https://openlayers.org/en/latest/examples/layer-zoom-limits.html?q=control
 
-const divEl = document.getElementById('zoom-level');
+// Projection 선언하기 - projection: 'Indiana-East',
+proj4.defs(
+  'Indiana-East', // Indiani-East Projection  선언
+  'PROJCS["IN83-EF",GEOGCS["LL83",DATUM["NAD83",' +
+    'SPHEROID["GRS1980",6378137.000,298.25722210]],PRIMEM["Greenwich",0],' +
+    'UNIT["Degree",0.017453292519943295]],PROJECTION["Transverse_Mercator"],' +
+    'PARAMETER["false_easting",328083.333],' +
+    'PARAMETER["false_northing",820208.333],' +
+    'PARAMETER["scale_factor",0.999966666667],' +
+    'PARAMETER["central_meridian",-85.66666666666670],' +
+    'PARAMETER["latitude_of_origin",37.50000000000000],' +
+    'UNIT["Foot_US",0.30480060960122]]',
+);
+register(proj4); // 등록
 
 function createMap(divId) {
   const view = new View({
-    center: fromLonLat([0, 0]),
-    zoom: 3,
-    maxZoom: 15,
-    // projection: 'EPSG:4326',
-    constrainOnlyCenter: true,
+    projection: 'Indiana-East',
+    zoom: 7,
+    minZoom: 6,
+    center: fromLonLat([-85.685, 39.891], 'Indiana-East'),
+    extent: transformExtent(
+      [-172.54, 23.81, -47.74, 86.46],
+      'EPSG:4326',
+      'Indiana-East',
+    ),
   });
 
   const map = new Map({
     target: divId,
     layers: [
       new TileLayer({
-        // visible at zoom level 14 and below.
-        //  1 ~ 4.9999 사이에 OSM
-        maxZoom: 5,
         source: new OSM(),
-      }),
-      new TileLayer({
-        //   // visible at zoom levels above 14
-        //   // 즉 5이상 줌 부터 TileJSON layer
-        minZoom: 5,
-        source: new TileJSON({
-          url: 'https://a.tiles.mapbox.com/v3/aj.1x1-degrees.json',
-          crossOrigin: 'anonymous',
-          tileSize: 512,
-        }),
       }),
     ],
     view,
   });
 
-  let currZoom = view.getZoom();
-  map.on('moveend', (e) => {
-    const newZoom = view.getZoom();
-    if (currZoom !== newZoom) {
-      divEl.innerHTML = '<h1>zoom:' + newZoom + '</h1>';
-      currZoom = newZoom;
-    }
-  });
-
-  view.origAnimate = view.animate;
-
-  view.animate = function (animateSpecs) {
-    if (typeof animateSpecs.resolution !== 'undefined') {
-      const currZoom = this.getZoom();
-      const newZoom = this.getZoomForResolution(animateSpecs.resolution);
-      if (newZoom != currZoom) {
-        console.log('zoom start, new zoom: ' + newZoom);
-      }
-    }
-    this.origAnimate(animateSpecs);
-  };
-
+  // Add ScaleLine!!!
+  map.addControl(
+    new ScaleLine({
+      units: 'us', // 미국 마일(mile) 단위
+    }),
+  );
   return map;
 }
 

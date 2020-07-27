@@ -8,14 +8,18 @@
 <body>
   <h1>Openlayers workshop</h1>
   <div id="map-container"></div>
-  <div id="map-info">
-    <h2>Map Info</h2>
-    <ul>
-
-    </ul>
-  </div>
-
+  <div id="mouse-position"></div>
+  <form>
+    <label for="projection">Projection</label>
+    <select name="projection" id="projection">
+      <option value="EPSG:4326">EPSG:4326</option>
+      <option value="EPSG:3857">EPSG:3857</option>
+    </select>
+  </form>
+  <label>
+    정밀도:
+    <input id="precision" type="number" min="0" max="12" value="4" />
+  </label>
   <script src="index.js"></script>
-
 </body>
 </html>

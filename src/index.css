@@ -9,14 +9,10 @@ html, body {
   height: 400px;
 }
 
-#map1 .ol-scale-line {
-  background-color: green;
-  font-size: 20px;
-  left: 10px;
+.custom-zoom-extent {
 
+  background-color: darkred;
+  padding: 3px;
+  background-image: url('data/button.png');
 }
 
-#map1 .ol-scale-line:hover {
-  background-color: brown;
-  font-size: 30px;
-}

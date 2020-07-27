@@ -7,19 +7,16 @@
 </head>
 <body>
   <h1>Openlayers workshop</h1>
-  <div id="map-container"></div>
-  <div id="mouse-position"></div>
-  <form>
-    <label for="projection">Projection</label>
-    <select name="projection" id="projection">
-      <option value="EPSG:4326">EPSG:4326</option>
-      <option value="EPSG:3857">EPSG:3857</option>
-    </select>
-  </form>
-  <label>
-    정밀도:
-    <input id="precision" type="number" min="0" max="12" value="4" />
-  </label>
+  <h2>기본 줌 슬라이더 배치</h2>
+  <div id="map1" class="map"></div>
+  <hr />
+
+  <h2>줌+와 - 사이에 슬라이더 배치</h2>
+  <div id="map2" class="map"></div>
+  <hr>
+
+  <h2>슬라이더 가로 모드 및 re-styled</h2>
+  <div id="map3" class="map"></div>
   <script src="index.js"></script>
 </body>
 </html>

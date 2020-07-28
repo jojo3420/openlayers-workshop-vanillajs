@@ -5,83 +5,111 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { transform } from 'ol/proj';
 import LayerGroup from 'ol/layer/Group';
-import LayerImage from 'ol/layer/Image';
-import LayerTile from 'ol/layer/Tile';
-import SourceImageArcGISRest from 'ol/source/ImageArcGISRest';
-import SourceOSM from 'ol/source/OSM';
-import SourceStamen from 'ol/source/Stamen';
 import LayerSwitcher from 'ol-layerswitcher';
 import TileLayer from 'ol/layer/Tile';
 import StamenSource from 'ol/source/Stamen';
+import { ATTRIBUTION } from 'ol/source/OSM';
+import OSM from 'ol/source/OSM';
+import ImageLayer from 'ol/layer/Image';
+import ImageArcGISRest from 'ol/source/ImageArcGISRest';
 
-//  base layer 는 type 프로퍼티의 'base' 값 필수!
-//  라디오 버튼 옵션으로 베이스 레이어들 중에 1개만 선택 되도록 구성됨
-const osmLayer = new LayerTile({
-  title: 'OSM',
-  type: 'base',
-  visible: true,
-  source: new SourceOSM(),
-});
+/**
+ * 스크롤 예제
+ *
+ *  CSS style max-height를 지정 하면 레이어 패널의 길이를 고정 시킬 수 있다.
+    지정 하지 않으면 layerSiwtcher 패널이 레이어 만큼 늘어 난다.
+ */
 
-const waterColorLayer = new LayerTile({
-  title: 'Water color',
-  type: 'base',
-  visible: false,
-  source: new SourceStamen({
-    layer: 'watercolor',
-  }),
-});
+const thunderforestAttributions = [
+  'Tiles &copy; <a href="http://www.thunderforest.com/">Thunderforest</a>',
+  ATTRIBUTION,
+];
 
-// 2개의 layer 로 구성된  레이어 그룹
-// 레이어 그룹도 1개의 레이어 처럼 작동함. 단지 레이어가 2개로 구성되어 있음!
-const waterColorLayerGroup = new LayerGroup({
-  title: 'Water color with labels',
-  type: 'base',
-  combine: true,
-  visible: false,
+const baseLayerGroup = new LayerGroup({
+  title: 'Base Maps',
   layers: [
-    // map layer
-    new LayerTile({
-      source: new SourceStamen({
+    new TileLayer({
+      title: 'Stamen - Water color',
+      type: 'base',
+      visible: true, // 디폴드로 보이는 레이어 지정!
+      source: new StamenSource({
         layer: 'watercolor',
       }),
     }),
-    // label layer
-    new LayerTile({
-      source: new SourceStamen({
-        layer: 'terrain-labels',
+    new TileLayer({
+      title: 'Stamen - Toner',
+      type: 'base',
+      visible: false,
+      source: new StamenSource({
+        layer: 'toner',
       }),
+    }),
+    new TileLayer({
+      title: 'Thunderforest - OpenCycleMap',
+      type: 'base',
+      visible: false,
+      source: new OSM({
+        url: 'http://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
+        attributions: thunderforestAttributions,
+      }),
+    }),
+    new TileLayer({
+      title: 'Thunderforest - Outdoors',
+      type: 'base',
+      visible: false,
+      source: new OSM({
+        url: 'http://{a-c}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png',
+        attributions: thunderforestAttributions,
+      }),
+    }),
+    new TileLayer({
+      title: 'Thunderforest - Landscape',
+      type: 'base',
+      visible: false,
+      source: new OSM({
+        url: 'http://{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png',
+        attributions: thunderforestAttributions,
+      }),
+    }),
+    new TileLayer({
+      title: 'Thunderforest - Transport',
+      type: 'base',
+      visible: false,
+      source: new OSM({
+        url: 'http://{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png',
+        attributions: thunderforestAttributions,
+      }),
+    }),
+    new TileLayer({
+      title: 'Thunderforest - Transport Dark',
+      type: 'base',
+      visible: false,
+      source: new OSM({
+        url:
+          'http://{a-c}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png',
+        attributions: thunderforestAttributions,
+      }),
+    }),
+    new TileLayer({
+      title: 'OSM',
+      type: 'base',
+      visible: false,
+      source: new OSM(),
     }),
   ],
 });
 
-const baseLayerGroup = new LayerGroup({
-  title: 'Base maps',
-  // 순서는 가장 나중에 등록되어 있는ㄴ 레이어가 활성화 되며
-  // 디스플레이 순서는 osm, waterColor, watercolor with Label
-  layers: [waterColorLayerGroup, waterColorLayer, osmLayer],
-});
-
-// type: 이 base 속성이 빠지면 옵션 레이어가 되며
-// 여러개 선택 또는 1개 선택 가능 하도록 체크 박스로 표현됨!
 const overlayGroup = new LayerGroup({
   title: 'Overlays',
   layers: [
-    new LayerImage({
+    new ImageLayer({
       title: 'Countries',
-      source: new SourceImageArcGISRest({
+      visible: false,
+      source: new ImageArcGISRest({
         ratio: 1,
         params: { LAYERS: 'show:0' },
-        // 요청후 응답까지 몇초 걸림..
         url:
           'https://ons-inspire.esriuk.com/arcgis/rest/services/Administrative_Boundaries/Countries_December_2016_Boundaries/MapServer',
-      }),
-    }),
-    // Create Label
-    new TileLayer({
-      title: 'terrain-labels1',
-      source: new StamenSource({
-        layer: 'terrain-labels',
       }),
     }),
   ],

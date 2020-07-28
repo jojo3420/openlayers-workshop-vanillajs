@@ -10,3 +10,9 @@ html, body {
   height: 400px;
 }
 
+
+/* Set the maxmimum height of the layerswitcher when it's shown */
+/* max-height 를 않하면  siwtcher 패널이 레이어 만큼 늘어난다. */
+.layer-switcher.shown {
+  max-height: 170px;
+}

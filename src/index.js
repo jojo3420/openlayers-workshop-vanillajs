@@ -11,6 +11,8 @@ import SourceImageArcGISRest from 'ol/source/ImageArcGISRest';
 import SourceOSM from 'ol/source/OSM';
 import SourceStamen from 'ol/source/Stamen';
 import LayerSwitcher from 'ol-layerswitcher';
+import TileLayer from 'ol/layer/Tile';
+import StamenSource from 'ol/source/Stamen';
 
 //  base layer 는 type 프로퍼티의 'base' 값 필수!
 //  라디오 버튼 옵션으로 베이스 레이어들 중에 1개만 선택 되도록 구성됨
@@ -73,6 +75,13 @@ const overlayGroup = new LayerGroup({
         // 요청후 응답까지 몇초 걸림..
         url:
           'https://ons-inspire.esriuk.com/arcgis/rest/services/Administrative_Boundaries/Countries_December_2016_Boundaries/MapServer',
+      }),
+    }),
+    // Create Label
+    new TileLayer({
+      title: 'terrain-labels1',
+      source: new StamenSource({
+        layer: 'terrain-labels',
       }),
     }),
   ],

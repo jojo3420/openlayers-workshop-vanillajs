@@ -1,4 +1,4 @@
-import 'ol/ol.css';
+// import 'ol/ol.css'; // this is ol default style
 import 'ol-layerswitcher/src/ol-layerswitcher.css';
 
 import Map from 'ol/Map';
@@ -8,92 +8,48 @@ import LayerGroup from 'ol/layer/Group';
 import LayerSwitcher from 'ol-layerswitcher';
 import TileLayer from 'ol/layer/Tile';
 import StamenSource from 'ol/source/Stamen';
-import { ATTRIBUTION } from 'ol/source/OSM';
 import OSM from 'ol/source/OSM';
 import ImageLayer from 'ol/layer/Image';
 import ImageArcGISRest from 'ol/source/ImageArcGISRest';
 
 /**
- * 스크롤 예제
+ *  sidebar 예제
  *
- *  CSS style max-height를 지정 하면 레이어 패널의 길이를 고정 시킬 수 있다.
-    지정 하지 않으면 layerSiwtcher 패널이 레이어 만큼 늘어 난다.
  */
-
-const thunderforestAttributions = [
-  'Tiles &copy; <a href="http://www.thunderforest.com/">Thunderforest</a>',
-  ATTRIBUTION,
-];
 
 const baseLayerGroup = new LayerGroup({
   title: 'Base Maps',
   layers: [
-    new TileLayer({
-      title: 'Stamen - Water color',
+    new LayerGroup({
+      title: 'Water color with labels',
       type: 'base',
-      visible: true, // 디폴드로 보이는 레이어 지정!
+      combine: true,
+      visible: false,
+      layers: [
+        new TileLayer({
+          source: new StamenSource({
+            layer: 'watercolor',
+          }),
+        }),
+        new TileLayer({
+          source: new StamenSource({
+            layer: 'terrain-labels',
+          }),
+        }),
+      ],
+    }),
+    new TileLayer({
+      title: 'Water color',
+      type: 'base',
+      visible: false,
       source: new StamenSource({
         layer: 'watercolor',
       }),
     }),
     new TileLayer({
-      title: 'Stamen - Toner',
-      type: 'base',
-      visible: false,
-      source: new StamenSource({
-        layer: 'toner',
-      }),
-    }),
-    new TileLayer({
-      title: 'Thunderforest - OpenCycleMap',
-      type: 'base',
-      visible: false,
-      source: new OSM({
-        url: 'http://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png',
-        attributions: thunderforestAttributions,
-      }),
-    }),
-    new TileLayer({
-      title: 'Thunderforest - Outdoors',
-      type: 'base',
-      visible: false,
-      source: new OSM({
-        url: 'http://{a-c}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png',
-        attributions: thunderforestAttributions,
-      }),
-    }),
-    new TileLayer({
-      title: 'Thunderforest - Landscape',
-      type: 'base',
-      visible: false,
-      source: new OSM({
-        url: 'http://{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png',
-        attributions: thunderforestAttributions,
-      }),
-    }),
-    new TileLayer({
-      title: 'Thunderforest - Transport',
-      type: 'base',
-      visible: false,
-      source: new OSM({
-        url: 'http://{a-c}.tile.thunderforest.com/transport/{z}/{x}/{y}.png',
-        attributions: thunderforestAttributions,
-      }),
-    }),
-    new TileLayer({
-      title: 'Thunderforest - Transport Dark',
-      type: 'base',
-      visible: false,
-      source: new OSM({
-        url:
-          'http://{a-c}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png',
-        attributions: thunderforestAttributions,
-      }),
-    }),
-    new TileLayer({
       title: 'OSM',
       type: 'base',
-      visible: false,
+      visible: true,
       source: new OSM(),
     }),
   ],
@@ -112,6 +68,32 @@ const overlayGroup = new LayerGroup({
           'https://ons-inspire.esriuk.com/arcgis/rest/services/Administrative_Boundaries/Countries_December_2016_Boundaries/MapServer',
       }),
     }),
+    new LayerGroup({
+      // A layer must have a title to appear in the layerswitcher
+      title: 'Census',
+      fold: 'open',
+      layers: [
+        new ImageLayer({
+          title: 'Districts',
+          source: new ImageArcGISRest({
+            ratio: 1,
+            params: { LAYERS: 'show:0' },
+            url:
+              'https://ons-inspire.esriuk.com/arcgis/rest/services/Census_Boundaries/Census_Merged_Local_Authority_Districts_December_2011_Boundaries/MapServer',
+          }),
+        }),
+        new ImageLayer({
+          title: 'Wards',
+          visible: false,
+          source: new ImageArcGISRest({
+            ratio: 1,
+            params: { LAYERS: 'show:0' },
+            url:
+              'https://ons-inspire.esriuk.com/arcgis/rest/services/Census_Boundaries/Census_Merged_Wards_December_2011_Boundaries/MapServer',
+          }),
+        }),
+      ],
+    }),
   ],
 });
 
@@ -126,5 +108,20 @@ const map = new Map({
   }),
 });
 
-const layerSwitcher = new LayerSwitcher();
-map.addControl(layerSwitcher);
+// const layerSwitcher = new LayerSwitcher();
+// map.addControl(layerSwitcher);
+
+// Get out-of-the-map div element with the ID "layers" and renders layers to it.
+// NOTE: If the layers are changed outside of the layer switcher then you
+// will need to call ol.control.LayerSwitcher.renderPanel again to refesh
+// the layer tree. Style the tree via CSS.
+
+// position option: left or right
+const sidebar = new ol.control.Sidebar({
+  element: 'sidebar',
+  position: 'left',
+});
+
+const toc = document.getElementById('layers');
+ol.control.LayerSwitcher.renderPanel(map, toc);
+map.addControl(sidebar);

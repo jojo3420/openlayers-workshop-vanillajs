@@ -1,18 +1,22 @@
-html, body {
-  margin: 0;
+
+
+
+body {
   padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+html, body, #map {
   height: 100%;
-  font-family: sans-serif;
-}
-
-.map {
-  width: 100%;
-  height: 400px;
+  font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
 
-/* Set the maxmimum height of the layerswitcher when it's shown */
-/* max-height 를 않하면  siwtcher 패널이 레이어 만큼 늘어난다. */
-.layer-switcher.shown {
-  max-height: 170px;
+
+/* As we've given the element we're displaying the layer tree within a class of
+ * layer-switcher (so we can benefit from the default layer-switcher styles) we
+ * need to override the position to avoid it being absolutely positioned */
+.layer-switcher {
+  position: initial;
 }

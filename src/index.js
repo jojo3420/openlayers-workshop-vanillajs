@@ -1,14 +1,13 @@
 import 'ol/ol.css';
 import 'ol-layerswitcher/src/ol-layerswitcher.css';
-import Map from 'ol/Map';
-import View from 'ol/View';
-import { transform } from 'ol/proj';
+import { Map, View } from 'ol';
+import OSMSource from 'ol/source/OSM';
 import LayerGroup from 'ol/layer/Group';
-import LayerImage from 'ol/layer/Image';
-import LayerTile from 'ol/layer/Tile';
-import SourceImageArcGISRest from 'ol/source/ImageArcGISRest';
-import SourceOSM from 'ol/source/OSM';
-import SourceStamen from 'ol/source/Stamen';
+import TileLayer from 'ol/layer/Tile';
+import StamenSource from 'ol/source/Stamen';
+import ImageArcGisRestSource from 'ol/source/ImageArcGISRest';
+import ImageLayer from 'ol/layer/Image';
+import { transform } from 'ol/proj';
 import LayerSwitcher from 'ol-layerswitcher';
 
 // github - sample code
@@ -17,66 +16,55 @@ import LayerSwitcher from 'ol-layerswitcher';
 // npm
 // https://www.npmjs.com/package/ol-layerswitcher
 
-const map = new Map({
-  target: 'map',
+/**
+ * LayerSwitcher Library study -1
+ * 기본 사용법
+ */
+
+const overlayGroup = new LayerGroup({
+  title: 'Overlays',
+  layers: [],
+});
+
+const baseLayerGroup = new LayerGroup({
+  title: 'Base Maps',
   layers: [
-    new LayerGroup({
-      title: 'Base maps',
-      layers: [
-        new LayerGroup({
-          title: 'Water color with labels',
-          type: 'base',
-          combine: true,
-          visible: false,
-          layers: [
-            new LayerTile({
-              source: new SourceStamen({
-                layer: 'watercolor',
-              }),
-            }),
-            new LayerTile({
-              source: new SourceStamen({
-                layer: 'terrain-labels',
-              }),
-            }),
-          ],
-        }),
-        new LayerTile({
-          title: 'Water color',
-          type: 'base',
-          visible: false,
-          source: new SourceStamen({
-            layer: 'watercolor',
-          }),
-        }),
-        new LayerTile({
-          title: 'OSM',
-          type: 'base',
-          visible: true,
-          source: new SourceOSM(),
-        }),
-      ],
+    // 선택된 레이어는 가장 나중에 등록된 레이어가 선택됨!
+    new TileLayer({
+      title: 'waterColor',
+      type: 'base',
+      source: new StamenSource({
+        layer: 'watercolor',
+      }),
     }),
-    new LayerGroup({
-      title: 'Overlays',
-      layers: [
-        new LayerImage({
-          title: 'Countries',
-          source: new SourceImageArcGISRest({
-            ratio: 1,
-            params: { LAYERS: 'show:0' },
-            url:
-              'https://ons-inspire.esriuk.com/arcgis/rest/services/Administrative_Boundaries/Countries_December_2016_Boundaries/MapServer',
-          }),
-        }),
-      ],
+    new TileLayer({
+      title: 'OSM',
+      type: 'base',
+      source: new OSMSource(),
     }),
   ],
+});
+
+const map = new Map({
+  target: 'map',
+  layers: [baseLayerGroup, overlayGroup],
   view: new View({
-    center: transform([-0.92, 52.96], 'EPSG:4326', 'EPSG:3857'),
-    zoom: 6,
+    center: [0, 0],
+    zoom: 3,
   }),
 });
 
+// add LayerSwitcher
 const layerSwitcher = new LayerSwitcher();
 map.addControl(layerSwitcher);
+
+// Create Label
+const terrainLabels1 = new TileLayer({
+  title: 'terrain-labels1',
+  source: new StamenSource({
+    layer: 'terrain-labels',
+  }),
+});
+
+// Push layer to layerGroup
+overlayGroup.getLayers().push(terrainLabels1);

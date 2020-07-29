@@ -4,14 +4,11 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-
   <!-- 아이콘 font-awesome -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
 <!--  <link rel="stylesheet" href="https://openlayers.org/en/v6.1.1/css/ol.css" />-->
-
   <!-- sidebar style!! this is custom design   -->
-  <link rel="stylesheet" href="https://rawgit.com/Turbo87/sidebar-v2/master/css/ol3-sidebar.css" />
+  <link rel="stylesheet" href="ol3-sidebar.css" />
   <link rel="stylesheet" href="index.css"/>
 </head>
 <body>
@@ -39,7 +36,7 @@
     <div class="sidebar-pane" id="home">
       <h1 class="sidebar-header">
         Layers
-        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+        <span class="sidebar-close"><i class="fa fa-caret-right"></i></span>
       </h1>
       <!-- !!! HERE WILL GO THE CONTENT OF LAYERSWITCHER !!! -->
       <div id="layers" class="layer-switcher"></div>
@@ -58,8 +55,6 @@
     </div>
   </div>
 </div>
-
-
 </div>
 <!-- END OF SIDEBAR DIV -->
 
@@ -82,7 +77,7 @@
   }
 </script>
 <!-- this is import js : ol3-sidebar -->
-<script src="https://rawgit.com/Turbo87/sidebar-v2/master/js/ol3-sidebar.js"></script>
+<script src="ol3-sidebar.js"></script>
 <script src="index.js"></script>
 </body>
 </html>

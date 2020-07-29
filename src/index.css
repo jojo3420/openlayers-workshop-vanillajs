@@ -1,22 +1,28 @@
-
-
-
 body {
   padding: 0;
   margin: 0;
   overflow: hidden;
 }
 
-html, body, #map {
+html, body {
   height: 100%;
   font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
+.lorem {
+  font-style: italic;
+  color: #AAA;
+}
 
+#map {
+  height: 500px;
+  width: 100%;
+}
 
-/* As we've given the element we're displaying the layer tree within a class of
- * layer-switcher (so we can benefit from the default layer-switcher styles) we
- * need to override the position to avoid it being absolutely positioned */
-.layer-switcher {
-  position: initial;
+h1 {
+  line-height: 1.1;
+}
+
+p {
+  line-height: 1.6;
 }

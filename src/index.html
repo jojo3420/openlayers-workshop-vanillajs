@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-
-  <!-- 아이콘 font-awesome -->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-<!--  <link rel="stylesheet" href="https://openlayers.org/en/v6.1.1/css/ol.css" />-->
-
-  <!-- sidebar style!! this is custom design   -->
-  <link rel="stylesheet" href="https://rawgit.com/Turbo87/sidebar-v2/master/css/ol3-sidebar.css" />
-  <link rel="stylesheet" href="index.css"/>
+  <title>스마트시티</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/css/ol.css" type="text/css">
+  <!--    <link rel="stylesheet" href="../css/ol3-sidebar.css" />-->
+  <!--     <link rel="stylesheet" href="../css/leaflet-sidebar.css" />-->
+  <link rel="stylesheet" href="css/leaflet-sidebar.css" />
+  <link rel="stylesheet" href="index.css" />
 </head>
 <body>
-<h1>Openlayers workshop</h1>
-<!-- Start of Sidebar Div -->
+<h1>스마트 시티</h1>
 <div id="sidebar" class="sidebar collapsed">
-  <!-- Nav Tabs -->
+  <!-- Nav tabs -->
   <div class="sidebar-tabs">
-
     <ul role="tablist">
-      <li><a href="#home"><i class="fa fa-bars"></i></a></li>
-      <li><a href="#profile"><i class="fa fa-user"></i></a></li>
-      <li class="disabled"><a href="#messages"><i class="fa fa-envelope"></i></a></li>
-      <li><a href="https://github.com/Turbo87/sidebar-v2" role="tab" target="_blank"><i class="fa fa-github"></i></a>
-      </li>
+      <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+      <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
+      <li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li>
+      <li><a href="https://github.com/Turbo87/sidebar-v2" role="tab" target="_blank"><i class="fa fa-github"></i></a></li>
     </ul>
 
     <ul role="tablist">
@@ -38,11 +32,19 @@
   <div class="sidebar-content">
     <div class="sidebar-pane" id="home">
       <h1 class="sidebar-header">
-        Layers
+        sidebar-v2
         <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
       </h1>
-      <!-- !!! HERE WILL GO THE CONTENT OF LAYERSWITCHER !!! -->
-      <div id="layers" class="layer-switcher"></div>
+
+      <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
+
+      <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+
+      <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+
+      <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+
+      <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
     </div>
 
     <div class="sidebar-pane" id="profile">
@@ -59,30 +61,11 @@
   </div>
 </div>
 
-
-</div>
-<!-- END OF SIDEBAR DIV -->
+<div id="map" class="sidebar-map"></div>
 
 
-<div id="map" class="map"></div>
-<!--  npm or yarn install dependency
-  https://github.com/Turbo87/sidebar-v2
-  https://turbo87.github.io/sidebar-v2/
-  https://www.npmjs.com/package/sidebar-v2
--->
-
-<script src="https://openlayers.org/en/v6.1.1/build/ol.js"></script>
-<script>
-  // TEMP sidebar-v2 requires ol.inherits which was removed in ol v6.0
-  if (window.ol && !window.ol.inherits) {
-    ol.inherits = function inherits(childCtor, parentCtor) {
-      childCtor.prototype = Object.create(parentCtor.prototype);
-      childCtor.prototype.constructor = childCtor;
-    }
-  }
-</script>
-<!-- this is import js : ol3-sidebar -->
-<script src="https://rawgit.com/Turbo87/sidebar-v2/master/js/ol3-sidebar.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js"></script>
+<script src="js/ol3-sidebar.js"></script>
 <script src="index.js"></script>
 </body>
 </html>

@@ -5,15 +5,22 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import { transform } from 'ol/proj';
 import LayerGroup from 'ol/layer/Group';
-import LayerSwitcher from 'ol-layerswitcher';
+import LayerSwitcher from 'ol-layerswitcher'; // do not comment!
 import TileLayer from 'ol/layer/Tile';
 import StamenSource from 'ol/source/Stamen';
 import OSM from 'ol/source/OSM';
 import ImageLayer from 'ol/layer/Image';
 import ImageArcGISRest from 'ol/source/ImageArcGISRest';
+import {
+  ZoomSlider,
+  MousePosition,
+  ScaleLine,
+  FullScreen,
+  defaults as defaultControls,
+} from 'ol/control';
 
 /**
- *  sidebar 예제
+ *  스마트 시티v2 prototype
  *
  */
 
@@ -106,10 +113,12 @@ const map = new Map({
     center: transform([-0.92, 52.96], 'EPSG:4326', 'EPSG:3857'),
     zoom: 6,
   }),
+  // controls: defaultControls.extend([
+  //   new ScaleLine({
+  //     units: 'metric',
+  //   }),
+  // ]),
 });
-
-// const layerSwitcher = new LayerSwitcher();
-// map.addControl(layerSwitcher);
 
 // Get out-of-the-map div element with the ID "layers" and renders layers to it.
 // NOTE: If the layers are changed outside of the layer switcher then you
@@ -125,3 +134,11 @@ const sidebar = new ol.control.Sidebar({
 const toc = document.getElementById('layers');
 ol.control.LayerSwitcher.renderPanel(map, toc);
 map.addControl(sidebar);
+map.addControl(new ZoomSlider());
+map.addControl(
+  new ScaleLine({
+    units: 'metric',
+  }),
+);
+map.addControl(new FullScreen());
+map.addControl(new MousePosition());

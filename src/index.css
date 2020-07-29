@@ -1,6 +1,3 @@
-
-
-
 body {
   padding: 0;
   margin: 0;
@@ -12,6 +9,18 @@ html, body, #map {
   font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
+#map {
+  width: 100%;
+  height: 500px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.1;
+}
+
+p {
+  line-height: 1.6;
+}
 
 
 /* As we've given the element we're displaying the layer tree within a class of
@@ -19,4 +28,36 @@ html, body, #map {
  * need to override the position to avoid it being absolutely positioned */
 .layer-switcher {
   position: initial;
+}
+
+
+/**
+ * The zoomslider in the second map shall be placed between the zoom-in and
+ * zoom-out buttons.
+ */
+#map .ol-zoom .ol-zoom-out {
+  margin-top: 204px;
+}
+
+#map .ol-zoomslider {
+  background-color: transparent;
+  top: 2.3em;
+}
+
+#map .ol-touch .ol-zoom .ol-zoom-out {
+  margin-top: 212px;
+}
+
+#map .ol-touch .ol-zoomslider {
+  top: 2.75em;
+}
+
+#map .ol-zoom-in.ol-has-tooltip:hover [role=tooltip],
+#map .ol-zoom-in.ol-has-tooltip:focus [role=tooltip] {
+  top: 3px;
+}
+
+#map .ol-zoom-out.ol-has-tooltip:hover [role=tooltip],
+#map .ol-zoom-out.ol-has-tooltip:focus [role=tooltip] {
+  top: 232px;
 }

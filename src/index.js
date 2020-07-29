@@ -1,4 +1,4 @@
-// import 'ol/ol.css'; // this is ol default style
+import 'ol/ol.css'; // this is ol default style
 import 'ol-layerswitcher/src/ol-layerswitcher.css';
 
 import Map from 'ol/Map';
@@ -119,9 +119,7 @@ const map = new Map({
 // position option: left or right
 const sidebar = new ol.control.Sidebar({
   element: 'sidebar',
-  position: 'left',
+  position: 'right',
 });
 
-const toc = document.getElementById('layers');
-ol.control.LayerSwitcher.renderPanel(map, toc);
 map.addControl(sidebar);

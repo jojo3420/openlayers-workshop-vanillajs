@@ -51,6 +51,6 @@ html, body {
   right: 8px;
   min-width: 319px;
   min-height: 110px;
-  display: none;
+  /*display: none;*/
   z-index: 4;
 }

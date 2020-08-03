@@ -5,7 +5,6 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",
-    "jquery": "^3.5.1",
     "ol": "^6.3.1"
   },
   "scripts": {

@@ -18,11 +18,43 @@ const searchPanelResult = document.querySelector('#search-panel-result');
 const searchInput = document.querySelector('#search-input');
 const searchBtn = document.querySelector('#search-btn');
 const queryHistoryDiv = document.querySelector('#query-history');
+const searchForm = document.querySelector('#search-panel-form');
 
 /**
  * Constant
  */
 const LOCAL_STORAGE_KEY = 'queries'; // localStorage KEY
+
+init();
+
+function init() {
+  loadQueryHistory();
+}
+
+function loadQueryHistory() {
+  /**
+   * 검색어 인풋 focus - show Element
+   * */
+  // Load queries from localStorage
+  const queries = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+  // console.log({ queries });
+  const ul = queryHistoryDiv.querySelector('ul');
+  ul.innerHTML = '';
+  queries.map((query) => {
+    const li = document.createElement('li');
+    const span = document.createElement('span');
+    span.textContent = '❌';
+    span.style.marginLeft = '150px';
+    span.onclick = (e) => onRemoveQuery(e, query);
+    li.innerHTML = `${query}`;
+    li.append(span);
+    li.onclick = () => onSelectQuery(query);
+    ul.appendChild(li);
+  });
+
+  // Show queries Element
+  //   queryHistoryDiv.style.display = 'block';
+}
 
 const map = new Map({
   /**
@@ -70,7 +102,7 @@ function onRemoveQuery(e, query) {
    * 2> 목록 새로고침
    * */
   e.stopPropagation();
-  console.log({ onRemoveQuery: query });
+  // console.log({ onRemoveQuery: query });
 }
 
 function onSelectQuery(query) {
@@ -78,54 +110,79 @@ function onSelectQuery(query) {
    *  쿼리 선택 이벤트: 현재 쿼리로 마커 렌더링 하기
    *
    * */
-  console.log({ 'onClickQuery:': query });
+  // console.log({ 'onClickQuery:': query });
 }
-
-searchInput.addEventListener('focus', (e) => {
-  /**
-   * 검색어 인풋 focus - show Element
-   * */
-  console.log('focus');
-
-  // Load queries from localStorage
-  const queries = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-  console.log({ queries });
-  const ul = queryHistoryDiv.querySelector('ul');
-  ul.innerHTML = '';
-  queries.map((query) => {
-    const li = document.createElement('li');
-    const span = document.createElement('span');
-    span.textContent = '❌';
-    span.style.marginLeft = '150px';
-    span.onclick = (e) => onRemoveQuery(e, query);
-    li.innerHTML = `${query}`;
-    li.append(span);
-    li.onclick = () => onSelectQuery(query);
-    ul.appendChild(li);
-  });
-
-  // Show queries Element
-  queryHistoryDiv.style.display = 'block';
-});
 
 searchInput.addEventListener('blur', (e) => {
   /**
    *  검색어 인풋 blur
    *
    */
-  console.log('blur');
-
+  // console.log('blur');
   // hide query history elem ent
-  queryHistoryDiv.style.display = 'none';
+  // queryHistoryDiv.style.display = 'none';
 });
 
-searchBtn.onclick = function () {
+// 검색 쿼리 입력시 예상 검색어 노출!
+searchInput.addEventListener('keydown', (e) => {
+  const { value } = e.target;
+  // console.log({ value });
+  // hide query history element
+  queryHistoryDiv.style.display = 'none';
+  searchPanelResult.style.display = 'none';
+
+  // 예상 검색어 노출!
+  const availableCity = [
+    '서울1',
+    '서울2',
+    '서울3',
+    '서울4',
+    '서울5',
+    '서울6',
+    '부산',
+    '대전',
+    '대구',
+    '광주',
+    '부산',
+  ];
+
+  // $(searchInput).autocomplete({
+  $(searchInput).autocomplete({
+    source: availableCity,
+    focus: (e, ui) => {
+      console.log('목록 리스트 중에서 로커스 되었을 때!');
+      console.log({ e, ui });
+      return false;
+    },
+    select: (e, ui) => {
+      console.log('목록 리스트가 선택되었을 때!');
+      // e =>  jquery.event, ui: { label: '', value: ''}
+      console.log({ e, ui });
+      console.log({ value, 'item.value': ui.item.value });
+
+      // @TODO - request 검색, 경로 탐색
+    },
+  });
+});
+
+searchForm.addEventListener('submit', (e) => {
+  /**
+   * Search form submit event handler
+   */
+  e.preventDefault();
+  console.log('submit');
+  searchSubmit();
+});
+
+searchBtn.onclick = searchSubmit;
+
+function searchSubmit() {
   /**
    * 장소 & 주소 검색 클릭 이벤트
    * @type {string}
    */
   const query = searchInput.value;
-  console.log({ '장소&주소검색': query });
+  // console.log({ '장소&주소검색': query });
   // 검색어 검증
   if (!query) return;
 
@@ -179,7 +236,7 @@ searchBtn.onclick = function () {
 
   // Save query to localStorage
   let queries = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-  console.log('loading queries', queries);
+  // console.log('loading queries', queries);
   if (queries) {
     if (queries.length === 5) {
       // 가장 이전 검색어 삭제
@@ -192,7 +249,7 @@ searchBtn.onclick = function () {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([query]));
   }
   searchInput.value = '';
-};
+}
 
 function createPointMarker({ id, location, address, coordinates }) {
   /**

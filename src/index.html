@@ -5,8 +5,6 @@
   <title>Title</title>
   <link rel="stylesheet" href="index.css" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
   <h1>Openlayers workshop</h1>
@@ -17,20 +15,24 @@
       <button type="button" id="search-btn">장소/주소 검색</button>
       <button type="button" id="route-btn">경로 탐색</button>
     </form>
+    <div id="query-history" class="ol-query-history">
+      <ul></ul>
+    </div>
   </div>
-  <div id="query-history" class="ol-query-history">
-    <ul></ul>
-  </div>
+
   <div id="search-panel-result" class="ol-panel-result" >
     <div></div>
     <ul></ul>
   </div>
-  <div class="ui-widget">
-  <label for="city">city: </label>
-    <input type="text" name="city" id="city">
-  </div>
+<!--  <div class="ui-widget">-->
+<!--  <label for="city">city: </label>-->
+<!--    <input type="text" name="city" id="city">-->
+<!--  </div>-->
 
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="index.js"></script>
-  <script src="auto-complete-test.js"></script>
+<!--  <script src="auto-complete-test.js"></script>-->
 </body>
 </html>

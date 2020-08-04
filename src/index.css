@@ -1,6 +1,7 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
   font-family: sans-serif;
 }
 
@@ -8,6 +9,12 @@ html, body {
   width: 100%;
   height: 500px;
 
+  /* 스크린 화면에 지도 콱차게 하기
+   https://stackoverflow.com/questions/60516479/how-to-fit-map-to-full-screen
+  */
+  /*border: 2px solid red;*/
+  /*flex: 1;*/
+  /*height: 100% !important;*/
 }
 
 .ol-panel {

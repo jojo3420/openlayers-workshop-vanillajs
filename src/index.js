@@ -109,9 +109,22 @@ const map = createMap('map');
 const btn = document.querySelector('#btn');
 btn.onclick = (e) => {
   const view = map.getView();
-  const extent =
-    [126.955912, 37.577676, 127.005598, 37.559109] ||
-    view.getProjection().getExtent();
-  console.log({ extent });
-  view.fit(extent);
+  // const extent =
+  //   [
+  //     126.955912,
+  //     37.577676,
+  //     127.005598,
+  //     37.559109,
+  //     126.956392,
+  //     37.555499,
+  //     127.005598,
+  //     37.559109,
+  //   ] || view.getProjection().getExtent();
+  // console.log({ extent });
+  // view.fit(extent);
+  const zoom = view.getZoom();
+  view.setCenter(center);
+  if (zoom !== 13) {
+    view.setZoom(13); // map default zoom is 13
+  }
 };

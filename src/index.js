@@ -43,7 +43,16 @@ function createMap(divId) {
   });
   const zoomToExtent = new ZoomToExtent({
     // f1, f2
-    extent: [126.955912, 37.577676, 127.005598, 37.559109],
+    extent: [
+      126.955912,
+      37.577676,
+      127.005598,
+      37.559109,
+      126.956392,
+      37.555499,
+      127.005598,
+      37.559109,
+    ],
     label: 'G',
     // tipLabel: 'TIP',
     // className: 'custom-zoom-extent',

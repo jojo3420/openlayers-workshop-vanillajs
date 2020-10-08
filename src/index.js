@@ -11,19 +11,39 @@ import Point from 'ol/geom/Point';
 import { Icon, Style } from 'ol/style';
 import { toSize } from 'ol/size';
 import Overlay from 'ol/Overlay';
+import markerIcon from './marker_A.png';
+import { createStringXY } from 'ol/coordinate';
+import { defaults as defaultControls, MousePosition } from 'ol/control';
+import proj4 from 'proj4';
+import { register } from 'ol/proj/proj4';
+import TileWMS from 'ol/source/TileWMS';
+import ImageLayer from 'ol/layer/Image';
+import ImageWMS from 'ol/source/ImageWMS';
+import LayerGroup from 'ol/layer/Group';
 // import $ from 'jquery';
 // import 'bootstrap';
 
-// Icon Symbolize
-// https://openlayers.org/en/latest/examples/icon.html?q=marker
+let center4326 = [126.8018, 37.3809]; // EPSG:4326
+let center3857 = [14115545.2862, 4492695.4896]; //  EPSG:3857
+let center5179 = [938303.3669, 1931995.8442]; //  EPSG:5179
+// marker
 
-// point icon url
-const src =
-  'data:image/png;base64,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';
+// https://epsg.io/?format=json&q=5179
+const EPSG_5179 = 'EPSG:5179'; // naver 좌표계
+// naver에서 사용하는 한국 좌표계
+const EPSG_5179_DEFS =
+  '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs';
+
+proj4.defs(EPSG_5179, EPSG_5179_DEFS);
+register(proj4);
 
 const iconFeature = new Feature({
-  geometry: new Point(fromLonLat([1, 1])),
-  name: 'My Island',
+  // geometry: new Point(fromLonLat(center)),
+  // geometry: new Point(center4326),
+  // geometry: new Point(center3857),
+  geometry: new Point(center5179),
+
+  name: '시흥시 어느곳',
   population: 4000,
   rainfall: 500,
 });
@@ -32,23 +52,23 @@ const iconStyle = new Style({
     anchor: [0.5, 46],
     anchorXUnits: 'fraction',
     anchorYUnits: 'pixels',
-    src: src,
+    src: markerIcon,
     // size: pixel 단위
-    size: toSize([100, 200]) || [100, 400],
+    // size: toSize([100, 200]) || [100, 400],
     // sale: 0.5,
   }),
 });
-
 iconFeature.setStyle(iconStyle);
 
-// Create point layer
+// Create marker layer
 const vectorSource = new VectorSource({
   features: [iconFeature],
 });
-const vectorLayer = new VectorLayer({
+const markerLayer = new VectorLayer({
   source: vectorSource,
 });
 
+// popup element
 const popupDiv = document.getElementById('popup');
 const popupOverlay = new Overlay({
   element: popupDiv,
@@ -57,29 +77,109 @@ const popupOverlay = new Overlay({
   offset: [0, -50],
 });
 
+// create mouse-position
+const mousePositionControl = new MousePosition({
+  coordinateFormat: createStringXY(4),
+  // projection: 'EPSG:4326',
+  // projection: 'EPSG:3857',
+  projection: 'EPSG:5179',
+  className: 'custom-mouse-position',
+  target: document.getElementById('mouse-position'),
+  undefinedHTML: '&nbsp;',
+});
+
+const imageLayer = new ImageLayer({
+  source: new ImageWMS({
+    ratio: 1,
+    url:
+      'http://dev-igeoserver-v2.qp65kfdyam.ap-northeast-2.elasticbeanstalk.com:80/SIHEUNG-SI_BASE/wms',
+    params: {
+      FORMAT: 'image/png',
+      VERSION: '1.1.1',
+      LAYERS: 'SIHEUNG-SI_BASE:LG_SIHEUNG-SI_LIGHT',
+      exceptions: 'application/vnd.ogc.se_inimage',
+    },
+  }),
+});
+const tiledLayer = new TileLayer({
+  visible: true,
+  source: new TileWMS({
+    url:
+      'http://dev-igeoserver-v2.qp65kfdyam.ap-northeast-2.elasticbeanstalk.com:80/SIHEUNG-SI_BASE/wms',
+    params: {
+      FORMAT: 'image/png',
+      VERSION: '1.1.1',
+      tiled: true,
+      LAYERS: 'SIHEUNG-SI_BASE:LG_SIHEUNG-SI_LIGHT',
+      exceptions: 'application/vnd.ogc.se_inimage',
+      tilesOrigin: 921510.5134551331 + ',' + 1923543.028626753,
+    },
+  }),
+});
+const mainLayerGroup = new LayerGroup({
+  title: '시흥시 레이어',
+  type: 'base',
+  combine: true,
+  visible: true,
+  layers: [imageLayer, tiledLayer],
+});
+
+// const baseLayerGroup = new LayerGroup({
+//   title: 'Base Map',
+//   // layerGroup 도 레이어로 추가 가능!
+//   layers: [
+//     mainLayerGroup,
+//     // osmLayer,
+//     // waterColorLayer,
+//     // waterColorLayerGroup,
+//   ],
+// });
+
+const view = new View({
+  // projection: 'EPSG:3857',
+  // center: center3857,
+  zoom: 14,
+  // center: center4326,
+  // projection: 'EPSG:4326',
+  center: center5179,
+  projection: 'EPSG:5179',
+});
+
 const map = new Map({
   target: 'map-container',
   layers: [
-    new TileLayer({
-      source: new XYZSource({
-        url: 'http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg',
-      }),
-      // source: new OSM(),
-    }),
+    mainLayerGroup,
+    // new TileLayer({
+    //   source: new OSM(),
+    // }),
     // Add Point Layer
-    vectorLayer,
+    markerLayer,
   ],
-  // overlays: [popupOverlay],
-  view: new View({
-    center: fromLonLat([0, 0]),
-    zoom: 2,
-  }),
+  overlays: [popupOverlay],
+  view: view,
+  controls: defaultControls().extend([mousePositionControl]),
 });
 
-map.addOverlay(popupOverlay);
+console.log({ view });
+
+// projection select event
+const projectionSelect = document.getElementById('projection');
+projectionSelect.addEventListener('change', (e) => {
+  const projection = e.target.value;
+  console.log({ projection });
+  mousePositionControl.setProjection(projection);
+});
+
+// precisionInput event
+const precisionInput = document.getElementById('precision');
+precisionInput.addEventListener('change', (e) => {
+  const format = createStringXY(e.target.valueAsNumber);
+  mousePositionControl.setCoordinateFormat(format);
+});
 
 // display popup on click
 map.on('click', function (e) {
+  // console.log('click');
   const feature = map.forEachFeatureAtPixel(e.pixel, (feature) => feature);
   if (feature) {
     const coordinates = feature.getGeometry().getCoordinates();
